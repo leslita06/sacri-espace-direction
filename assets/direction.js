@@ -245,11 +245,46 @@ function renderEcarts(){
 }
 
 /* ======================= VEILLE ======================= */
-var VE={imp:""};
+var VE={imp:"",mode:(location.hash.indexOf("semaine")>0?"sem":"tri")};
 var IMP={haut:{l:"Fort",p:"r",c:"#EF4444"},moyen:{l:"Moyen",p:"a",c:"#F59E0B"},bas:{l:"Faible",p:"n",c:"#94A3B8"}};
 var VCAT={"Offre":{ico:"megaphone",c:"#E95B0F"},"Réseau":{ico:"map-pin",c:"#0EA5E9"},"Service":{ico:"wrench",c:"#10B981"},"Salon":{ico:"store",c:"#8B5CF6"}};
 function vfait(v){var c=VCAT[v.cat];return '<div class="vf"><p class="d">'+jour(v.d).split(" ")[0]+"<small>"+fr(v.d)+'</small></p><div style="min-width:0"><p class="q"><span class="pill '+IMP[v.impact].p+'">Impact '+IMP[v.impact].l.toLowerCase()+'</span><span class="stag" style="color:'+c.c+'">'+ic(c.ico)+v.cat+"</span>"+socTags(v.soc)+'</p><p class="f"><b>'+esc(v.qui)+"</b> : "+esc(v.fait)+'</p><p class="s">'+ic("arrow-right")+esc(v.suite)+"</p></div></div>";}
+function renderVMode(){
+  $("ve-mode").innerHTML='<div class="seg big" role="group" aria-label="Période de la veille"><button data-vm="tri" class="'+(VE.mode==="tri"?"on":"")+'">'+ic("calendar-range")+'Trimestre</button><button data-vm="sem" class="'+(VE.mode==="sem"?"on":"")+'">'+ic("calendar-days")+"Semaine</button></div>";
+  [].forEach.call($("ve-mode").querySelectorAll("[data-vm]"),function(b){b.onclick=function(){VE.mode=b.dataset.vm;if(history.replaceState)history.replaceState(null,"","#veille"+(VE.mode==="sem"?"-semaine":""));renderVeille();K.hydrate($("v-veille"));};});
+  $("ve-q").style.display=VE.mode==="tri"?"":"none";$("ve-w").style.display=VE.mode==="sem"?"":"none";}
+function renderVeilleQ(){
+  var s=SF(),Q=X.veille_t3,F=Q.f.filter(function(f){return inSF(f[4]);});
+  K.fbar($("f-veille"),{per:false,note:s?"Les faits concernant tout le groupe restent affichés.":""});
+  $("ve-lede").innerHTML="Ce que les concurrents ont fait de juillet à septembre, et ce que nous avons décidé en face. Les concurrents sont désignés par leur type.";
+  var mo=[7,8,9].map(function(m){return F.filter(function(f){return f[0]===m;}).length;}),fo=F.filter(function(f){return f[3]===2;}),t2=s?null:sum(Q.t2.faits),t2f=sum(Q.t2.fort);
+  var dv=t2?Math.round((F.length-t2)/t2*100):null;
+  $("vq-verdict").innerHTML=s?"<b>"+pl(F.length,"fait")+"</b> pour "+s:'<b>'+(dv>=0?"+":"")+dv+' %</b> de faits relevés par rapport au 2<sup>e</sup> trimestre, avec un pic en septembre (salon SIREXE).';
+  $("vq-kpis").innerHTML=
+    K.kc({ico:"newspaper",key:1,l:"Faits relevés",v:F.length,sp:'<canvas id="sp-vq"></canvas>',s:t2?'<span class="dl nt">'+ic("arrow-up")+"+"+dv+" %</span><span>contre "+t2+" au 2<sup>e</sup> trimestre</span>":"<span>juillet à septembre</span>"})+
+    K.kc({ico:"siren",l:"Faits à fort impact",v:fo.length,s:'<span class="pill r">'+ic("triangle-alert")+(s?"pour "+s:"contre "+t2f+'<em class="hm3">&nbsp;au 2<sup>e</sup> trimestre</em>')+"</span>"})+
+    K.kc({ico:"gavel",l:"Décisions prises au comité",v:Q.decisions,s:'<span class="pill g">'+ic("circle-check")+'sur 6<em class="hm3">&nbsp;faits à fort impact</em></span><span>tout le groupe</span>'});
+  K.spark("sp-vq",mo,{bar:1,col:col("--acc")});
+  $("vq-mv").innerHTML=Q.mouvements.map(function(m,i){var dim=s&&m.soc!==s;
+    return '<div class="card mv'+(dim?" dim":"")+'"><div class="mv-top"><span class="mv-ic" style="background:'+m.c+'1A;color:'+m.c+'">'+ic(m.ico)+'</span><span class="mv-n">'+(i+1)+'</span><span class="mv-m">'+m.mois+'</span></div>'+
+      '<p class="mv-tag"><span class="stag" style="color:'+m.c+'">'+m.sujet+"</span>"+K.stag(m.soc)+'</p><p class="mv-who">'+esc(m.type)+'</p><p class="mv-f">'+esc(m.fait)+"</p>"+
+      '<div class="mv-b"><p class="mv-l r">'+ic("siren")+'<span><small>Impact</small>'+esc(m.impact)+'</span></p><p class="mv-l g">'+ic("arrow-right")+'<span><small>Suite donnée</small>'+esc(m.suite)+"</span></p></div></div>";}).join("");
+  /* carte de chaleur types x sujets */
+  var cl=function(n){return n===0?"z":n===1?"l1":n<=3?"l2":"l3";};
+  $("vq-mx").innerHTML="<thead><tr><th></th>"+Q.sujets.map(function(u){return "<th>"+ic(u[1])+u[0]+"</th>";}).join("")+"<th>Total</th></tr></thead><tbody>"+Q.types.map(function(t,ti){var tot=0;
+    return '<tr><td class="rh"><span>'+ic(t[2])+'<em class="lg">'+t[0]+'</em><em class="sm">'+t[1]+"</em></span></td>"+Q.sujets.map(function(u,si){var n=F.filter(function(f){return f[1]===ti&&f[2]===si;}).length;tot+=n;return '<td class="'+cl(n)+'" title="'+t[0]+", "+u[0].toLowerCase()+" : "+n+'">'+n+"</td>";}).join("")+'<td class="z tot">'+tot+"</td></tr>";}).join("")+"</tbody>";
+  /* courbe par mois */
+  var lab=Q.t2.mois.concat(["juil.","août","sept."]),fm=[7,8,9].map(function(m){return F.filter(function(f){return f[0]===m&&f[3]===2;}).length;});
+  K.mk("c-vq",{type:"line",data:{labels:lab,datasets:[
+    {label:"2e trimestre",data:s?[null,null,null,null,null,null]:Q.t2.faits.concat([null,null,null]),borderColor:"#CBD5E1",backgroundColor:"#CBD5E1",borderWidth:2.5,pointRadius:4,pointBackgroundColor:"#CBD5E1",tension:.35,spanGaps:false},
+    {label:"3e trimestre",data:[null,null,s?null:Q.t2.faits[2]].concat(mo),borderColor:"#E95B0F",backgroundColor:"rgba(233,91,15,.10)",fill:true,borderWidth:3,pointRadius:[0,0,0,5,5,6],pointBackgroundColor:"#E95B0F",tension:.35},
+    {label:"Dont impact fort",data:(s?[null,null,null]:Q.t2.fort).concat(fm),borderColor:"#EF4444",backgroundColor:"#EF4444",borderWidth:2,borderDash:[5,4],pointRadius:3,tension:.35}]},
+    options:{maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{tooltip:{filter:function(i){return i.raw!==null&&!(i.datasetIndex===1&&i.dataIndex===2);}}},scales:{x:K.xC(),y:{min:0,grid:K.grid(),border:{display:false},ticks:{precision:0,maxTicksLimit:5}}}}});
+  $("vq-rep").innerHTML=Q.reponses.map(function(r){var dim=s&&r.soc!==s;return '<div class="row qr'+(dim?" dim":"")+'" style="cursor:default"><span class="ty '+r.st[0]+'">'+ic(r.ico)+'</span><div style="min-width:0"><p class="qr-t">'+esc(r.t)+'</p><p class="qr-s">'+K.stag(r.soc)+"<span>"+esc(r.d)+'</span></p></div><span class="pill '+r.st[0]+'">'+ic(r.st[1])+r.st[2]+"</span></div>";}).join("");
+}
 function renderVeille(){
+  renderVMode();
+  if(VE.mode==="tri"){renderVeilleQ();return;}
   var s=SF(),V=X.veille;
   K.fbar($("f-veille"),{per:false,extra:[{id:"imp",type:"seg",label:"Impact",ico:"siren",opts:[["","Tous"],["haut","Fort"],["moyen","Moyen"],["bas","Faible"]],val:VE.imp,on:function(v){VE.imp=v;renderVeille();}}]});
   var F0=V.faits.filter(function(v){return inSF(v.soc);}),F1=F0.filter(function(v){return !VE.imp||v.impact===VE.imp;});
@@ -284,7 +319,7 @@ function show(v){CUR=v;
   [].forEach.call(document.querySelectorAll(".ni[data-v],.tabbar button"),function(b){b.classList.toggle("on",b.dataset.v===v);});
   [].forEach.call(document.querySelectorAll(".view"),function(s){s.classList.toggle("on",s.id==="v-"+v);});
   $("crumb-v").textContent=VNAME[v];
-  if(history.replaceState)history.replaceState(null,"","#"+v);
+  if(history.replaceState)history.replaceState(null,"","#"+v+(v==="veille"&&VE.mode==="sem"?"-semaine":""));
   render(v);window.scrollTo({top:0});}
 function renderAll(){badges();render(CUR);}
 K.rerender=renderAll;
@@ -293,7 +328,7 @@ document.addEventListener("click",function(e){var g=e.target.closest&&e.target.c
 K.hydrate();
 K.initTheme();
 $("date").textContent=K.flong(T)+" 2026, 11 h";
-var h0=(location.hash||"").slice(1);
+var h0=(location.hash||"").slice(1).replace("-semaine","");
 badges();
 show(VIEWS.indexOf(h0)>=0?h0:"dg");
 window.__dir={show:show,K:K};

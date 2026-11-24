@@ -140,3 +140,23 @@ DIR.veille_hist={sem:["29/09","06/10","13/10","20/10","27/10","03/11","10/11","1
 /* écarts de janvier à septembre : [mois, service, société, gravité] (registre détaillé archivé) */
 DIR.anc=[[0,0,0,1],[0,0,1,0],[1,0,3,2],[2,0,0,1],[2,0,0,0],[2,0,2,0],[3,0,4,1],[3,0,1,0],[4,0,1,0],[4,0,4,0],[5,0,0,0],[6,0,4,1],[6,0,0,0],[6,0,0,1],[7,0,0,1],[7,0,0,0],[8,0,3,1],[8,0,0,0],[8,0,1,0],[0,1,0,1],[0,1,0,2],[0,1,0,1],[1,1,4,0],[1,1,0,1],[2,1,0,0],[2,1,0,0],[3,1,0,0],[3,1,0,2],[3,1,4,1],[4,1,0,0],[5,1,0,1],[5,1,0,0],[6,1,0,2],[6,1,4,0],[7,1,0,0],[8,1,4,1],[8,1,0,0],[0,2,2,2],[1,2,0,0],[1,2,3,0],[2,2,0,0],[3,2,2,0],[4,2,2,0],[4,2,1,0],[5,2,2,0],[6,2,4,1],[6,2,0,1],[7,2,4,0],[7,2,0,0],[8,2,2,0],[0,3,4,1],[1,3,1,0],[2,3,0,1],[2,3,0,0],[3,3,0,0],[4,3,0,0],[5,3,0,0],[7,3,2,0],[8,3,3,0],[8,3,4,0],[1,4,0,2],[2,4,0,0],[4,4,0,0],[6,4,1,0],[7,4,2,1],[0,5,2,1],[2,5,2,0],[3,5,1,0],[5,5,0,0],[6,5,4,2],[8,5,4,0]];
 DIR.sav={reponse_h:4.0,dans_delai:82,attente:1,recus:21};
+
+/* ---------- veille concurrents : bilan du 3e trimestre 2026 (juillet à septembre) ----------
+   f : [mois, type de concurrent, sujet, impact (0 faible, 1 moyen, 2 fort), société concernée] */
+DIR.veille_t3={"f":[[7,0,1,0,"SACRI"],[7,0,3,0,"SACRI"],[7,1,1,0,"Trans-Roulements"],[7,1,1,0,"Trans-Roulements"],[7,2,1,0,"PST-CI"],[7,2,3,1,"PST-CI"],[7,3,0,1,"SACRI"],[7,3,0,0,"SAFIR"],[7,3,1,2,"SACRI"],[7,3,1,0,"SAFIR"],[8,0,0,1,"SACRI"],[8,0,0,1,"SAFIR"],[8,0,1,2,"SACRI"],[8,0,1,1,"SAFIR"],[8,1,1,0,"DEFI"],[8,1,5,1,"Trans-Roulements"],[8,2,3,1,"PST-CI"],[8,4,2,1,"DEFI"],[8,4,5,0,"DEFI"],[9,0,0,2,"SACRI"],[9,0,0,0,"SACRI"],[9,0,2,1,"SACRI"],[9,0,4,1,"SACRI"],[9,0,4,1,"SACRI"],[9,1,0,0,"Trans-Roulements"],[9,1,1,0,"Trans-Roulements"],[9,1,2,2,"Trans-Roulements"],[9,1,2,1,"Trans-Roulements"],[9,1,2,1,"DEFI"],[9,1,4,1,"Trans-Roulements"],[9,2,3,2,"PST-CI"],[9,2,3,0,"PST-CI"],[9,2,3,0,"PST-CI"],[9,2,5,0,"PST-CI"],[9,2,5,0,"PST-CI"],[9,3,1,0,"SACRI"],[9,4,0,0,"DEFI"],[9,4,4,2,"DEFI"]]};
+Object.assign(DIR.veille_t3,{
+ types:[["Importateurs de marques concurrentes","Importateurs","boxes"],["Distributeurs régionaux","Distributeurs","truck"],["Ateliers indépendants","Ateliers","wrench"],["Revendeurs en ligne","En ligne","globe"],["Nouveaux entrants","Nouveaux","sparkles"]],
+ sujets:[["Offre","megaphone"],["Prix","tag"],["Réseau","map-pin"],["Service","wrench"],["Salon","store"],["Recrutement","user-plus"]],
+ t2:{mois:["avr.","mai","juin"],faits:[8,9,11],fort:[1,2,1]},
+ decisions:5,
+ mouvements:[
+  {ico:"tag",c:"#EF4444",sujet:"Prix",mois:"Août",type:"Importateur de marques concurrentes",soc:"SACRI",fait:"Baisse de 12 % sur les tronçonneuses d'entrée de gamme, juste avant la saison forestière.",impact:"Ventes de tronçonneuses à risque sur la saison",suite:"Prix alignés sur 3 modèles, décision du comité du 08/09"},
+  {ico:"map-pin",c:"#0EA5E9",sujet:"Réseau",mois:"Septembre",type:"Distributeur régional",soc:"Trans-Roulements",fait:"Ouvre deux points de vente, à Yamoussoukro et à Daloa.",impact:"Clients du centre-ouest exposés",suite:"Tournée commerciale faite, dépositaire à l'étude"},
+  {ico:"wrench",c:"#10B981",sujet:"Service",mois:"Septembre",type:"Atelier indépendant",soc:"PST-CI",fait:"Lance un contrat d'entretien annuel des pompes et vérins, et recrute des techniciens.",impact:"Clients d'atelier sollicités",suite:"Notre contrat d'entretien lancé le 01/10"}
+ ],
+ reponses:[
+  {ico:"tag",t:"Alignement des prix sur 3 tronçonneuses d'entrée de gamme",soc:"SACRI",d:"Appliqué depuis le 15/09",st:["g","circle-check","Fait"]},
+  {ico:"file-check",t:"Contrat d'entretien annuel pour pompes et vérins",soc:"PST-CI",d:"Lancé le 01/10, 9 contrats signés",st:["b","activity","En cours"]},
+  {ico:"map-pin",t:"Dépositaire au centre-ouest, face aux deux nouveaux points de vente",soc:"Trans-Roulements",d:"Étude remise au comité du 08/12",st:["a","gavel","À décider"]}
+ ]
+});

@@ -8,7 +8,7 @@
 <title>SACRI, espace direction</title>
 <link rel="icon" href="data:,">
 <link rel="preload" href="assets/Inter.ttf" as="font" type="font/ttf" crossorigin>
-<link rel="stylesheet" href="assets/style.css?v=20261124s">
+<link rel="stylesheet" href="assets/style.css?v=20261124t">
 </head>
 <body>
 <div class="app">
@@ -192,7 +192,34 @@
   <!-- ===================== VEILLE CONCURRENTS ===================== -->
   <section class="view" id="v-veille">
     <div class="vh"><div><h1>Veille concurrents</h1><p class="lede" id="ve-lede"></p></div></div>
+    <div class="vmode" id="ve-mode"></div>
     <div class="fbar" id="f-veille"></div>
+
+    <div id="ve-q">
+      <div class="qhero">
+        <div><p class="qk"><i data-i="calendar-range"></i>Bilan du trimestre</p><p class="qt">3<sup>e</sup> trimestre 2026</p><p class="qs">juillet, août, septembre</p></div>
+        <p class="qv" id="vq-verdict"></p>
+      </div>
+      <div class="kstrip k3" id="vq-kpis"></div>
+      <div class="sh"><h2><i data-i="flag"></i>Les 3 mouvements marquants</h2></div>
+      <div class="g3 mvs" id="vq-mv"></div>
+      <div class="g21 row2">
+        <div class="card">
+          <div class="card-h"><p class="t"><i data-i="layers"></i>Qui a bougé, sur quoi</p><p class="u">faits du trimestre</p></div>
+          <div class="mx-wrap"><table class="mx qmx" id="vq-mx"></table></div>
+          <div class="mx-leg"><span><i style="background:var(--soft);border:1px solid var(--line)"></i>Aucun</span><span><i style="background:#FFEDD5"></i>1</span><span><i style="background:#FDBA74"></i>2 à 3</span><span><i style="background:#EF4444"></i>4 ou plus</span></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><p class="t"><i data-i="chart-line"></i>Faits relevés par mois</p><p class="u">avril à septembre</p></div>
+          <div class="card-b"><div class="ch"><canvas id="c-vq"></canvas></div></div>
+          <div class="legend"><span><i style="background:#E95B0F"></i>3<sup>e</sup> trimestre</span><span><i style="background:#CBD5E1"></i>2<sup>e</sup> trimestre</span><span><i style="background:#EF4444"></i>Dont impact fort</span></div>
+        </div>
+      </div>
+      <div class="sh"><h2><i data-i="circle-check-big"></i>Ce que nous avons fait en réponse</h2></div>
+      <div class="list" id="vq-rep"></div>
+    </div>
+
+    <div id="ve-w">
     <div class="kstrip" id="ve-kpis"></div>
     <div class="g21 row2">
       <div class="card">
@@ -210,6 +237,7 @@
       <div class="card-h"><p class="t"><i data-i="chart-column"></i>Faits relevés, semaine par semaine</p><p class="u">8 dernières synthèses du mardi</p></div>
       <div class="card-b"><div class="ch s"><canvas id="c-ve-h"></canvas></div></div>
       <div class="legend"><span><i style="background:#EF4444"></i>Impact fort</span><span><i style="background:#F59E0B"></i>Impact moyen</span><span><i style="background:#94A3B8"></i>Impact faible</span></div>
+    </div>
     </div>
   </section>
 
@@ -237,11 +265,11 @@
 <div class="toast" id="toast"></div>
 
 <script src="assets/chart.umd.min.js?v=4"></script>
-<script src="assets/icons.js?v=20261124r"></script>
+<script src="assets/icons.js?v=20261124t"></script>
 <script src="data/donnees.js?v=20261119b"></script>
-<script src="data/historique.js?v=20261124r"></script>
-<script src="data/direction.js?v=20261124r"></script>
-<script src="assets/core.js?v=20261124r"></script>
-<script src="assets/direction.js?v=20261124r"></script>
+<script src="data/historique.js?v=20261124t"></script>
+<script src="data/direction.js?v=20261124t"></script>
+<script src="assets/core.js?v=20261124t"></script>
+<script src="assets/direction.js?v=20261124t"></script>
 </body>
 </html>
